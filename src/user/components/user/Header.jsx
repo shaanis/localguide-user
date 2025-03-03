@@ -159,7 +159,7 @@ const Header = () => {
                 >
                   Tickets
                   <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-600 text-teal-50 rounded-full ms-1">
-                  {tickets.length}
+                  {tickets?.length}
                   </span>
                 </Link>
                 <Link className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">
