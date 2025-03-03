@@ -9,6 +9,7 @@ import Events from './user/pages/Events';
 import Hotels from './user/pages/Hotels';
 import EventDetailPage from './user/pages/EventDetailPage';
 import { ToastContainer } from 'react-toastify';
+import TicketsPage from './user/pages/TicketsPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/detailPlace/:id' element={<DetailPlace/>}></Route>
           <Route path='events/:id/detail-events' element={<EventDetailPage/>}></Route>
           <Route path='/favourites' element={<Favorites/>}></Route>
+          <Route path='/tickets' element={<TicketsPage/>}></Route>
           <Route path='/events' element={<Events/>}></Route>
           <Route path='/hotels' element={<Hotels/>}></Route>
         </Routes>

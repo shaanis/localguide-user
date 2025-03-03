@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { addToFavApi, getPlaceDetailApi } from "../../services/allApi";
 import { useParams } from "react-router-dom";
 import serverurl from "../../services/serverurl";
 import { toast, ToastContainer } from "react-toastify";
 import Header from "../components/user/Header";
+import { addfavoriteResponseContext } from "../../contextApi/Contextapi";
 
 const DetailPlace = () => {
+    const {addFavouriteResponse,setAddFavouriteResponse}=useContext(addfavoriteResponseContext)
   const { id } = useParams(); // Get ID from URL
   const [place, setPlace] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,6 +74,7 @@ const DetailPlace = () => {
       
       // Improved success check
       if (result.status === 200 || result.status === 201 || result?.data?.success) {
+        setAddFavouriteResponse(result)
         toast.success("Added to favourites successfully!")
       } else {
         toast.error("Place already in favourites.")

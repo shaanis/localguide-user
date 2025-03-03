@@ -1,15 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
+import { getUserFavApi } from "../../../services/allApi";
+import { addfavoriteResponseContext, removefavoriteResponseContext } from "../../../contextApi/Contextapi";
 
 const Header = () => {
-  const navigate = useNavigate()
+  const {addFavouriteResponse,setAddFavouriteResponse}=useContext(addfavoriteResponseContext)
+  const {removeFavouriteResponse,setRemoveFavouriteResponse} = useContext(removefavoriteResponseContext)
+  
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [favorite,setFavorite]=useState("")
+  useEffect(()=>{
+    getFavourite()
+  },[addFavouriteResponse,removeFavouriteResponse])
+   const getFavourite = async()=>{
+      const token = sessionStorage.getItem("token")
+    if(token){
+      const reqHeader = {
+        "Authorization":`Bearer ${token}`
+      }
+      try{
+        const result = await getUserFavApi(reqHeader)
+        setFavorite(result.data)
+        console.log(result.data);
+        
+      }catch(e){
+        console.log(e);
+        
+      }
+    }
+      
+     }
 
-const handleLogout=()=>{
-  sessionStorage.clear()
-  navigate('/login')
-}
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate("/login");
+  };
   return (
     <>
       <nav className="bg-transparent shadow dark:bg-gray-800 absolute z-1 w-full">
@@ -17,11 +44,7 @@ const handleLogout=()=>{
           <div className="lg:flex lg:items-center">
             <div className="flex items-center justify-between">
               <a href="#">
-                <img
-                  className="w-auto h-15 "
-                  src={logo}
-                  alt=" Logo"
-                />
+                <img className="w-auto h-15 " src={logo} alt=" Logo" />
               </a>
 
               {/* Mobile menu button */}
@@ -69,46 +92,57 @@ const handleLogout=()=>{
 
             <div
               className={`${
-                isOpen ? "translate-x-0 opacity-100 flex justify-between" : "opacity-0 -translate-x-full"
+                isOpen
+                  ? "translate-x-0 opacity-100 flex justify-between"
+                  : "opacity-0 -translate-x-full"
               } absolute inset-x-0 z-20 flex-1 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center lg:justify-between`}
             >
               <div className="flex flex-col text-gray-600 capitalize dark:text-gray-300 lg:flex lg:px-16 lg:-mx-4 lg:flex-row lg:items-center font-bold">
-                <Link to={'/'}
-                 
+                <Link
+                  to={"/"}
                   className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
                 >
                   Home
                 </Link>
-                <Link to={'/places'}
-                 
+                <Link
+                  to={"/places"}
                   className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
                 >
                   Places
                 </Link>
                 <Link
-                  to={'/hotels'}
+                  to={"/hotels"}
                   className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
                 >
                   Hotels
                 </Link>
                 <Link
-                  to={'/events'}
+                  to={"/events"}
                   className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
                 >
                   Events
                 </Link>
-                <Link to={'/favourites'}
-                 
+                <Link
+                  to={"/favourites"}
                   className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
                 >
                   Favourites
+                  <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-600 text-teal-50 rounded-full ms-1 ">
+                    {favorite.length}
+                  </span>
                 </Link>
-                <Link className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
+                <Link
+                  to={"/tickets"}
+                  className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200"
                 >
+                  Tickets
+                  <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-600 text-teal-50 rounded-full ms-1">
+                    1
+                  </span>
+                </Link>
+                <Link className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">
                   Contact Us
-               </Link >
-                 
-                
+                </Link>
 
                 <div className="relative mt-4 lg:mt-0 lg:mx-4">
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -134,9 +168,7 @@ const handleLogout=()=>{
                   />
                 </div>
               </div>
-              <div onClick={handleLogout}>
-                Logout
-              </div>
+              <div className="btn cursor-pointer font-bold text-red-600" onClick={handleLogout}>Logout</div>
 
               <div className="flex justify-center mt-6 lg:flex lg:mt-0 lg:-mx-2">
                 {/* Add social links/icons */}

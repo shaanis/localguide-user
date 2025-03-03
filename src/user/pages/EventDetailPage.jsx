@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaCalendarAlt, FaMapMarkerAlt, FaTimes } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { addBookingEventsApi, getDetailEventsApi } from "../../services/allApi";
@@ -131,8 +131,8 @@ const totalPrice = event?.ticketPrice*tickets
         <div className="min-h-screen pt-28  p-8 flex flex-col items-center">
           {/* Hero Section */}
           <div className="relative w-full max-w-6xl h-72 bg-gradient-to-r from-purple-500 to-blue-600 text-white flex flex-col items-center justify-center rounded-xl shadow-lg">
-            <h1 className="text-4xl font-extrabold">{event?.eventName || "Event Name"}</h1>
-            <p className="mt-2 text-lg">Innovate | Connect | Grow</p>
+            <h1 className="text-4xl font-extrabold">{event?.eventName }</h1>
+            <p className="mt-2 text-lg">Come | Participate | Enjoy</p>
           </div>
     
           {/* Marquee for Time Display */}

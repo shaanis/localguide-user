@@ -48,3 +48,7 @@ export const getDetailEventsApi=async(id)=>{
 export const addBookingEventsApi=async(id,reqBody,reqHeader)=>{
     return await commonApi('POST',`${serverurl}/${id}/add-booking`,reqBody,reqHeader)
 }
+//get booked tickets of Events
+export const getTicketsEventsApi=async(reqHeader)=>{
+    return await commonApi('GET',`${serverurl}/user-booking`,{},reqHeader)
+}

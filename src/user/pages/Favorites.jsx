@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaTrash, FaMapMarkerAlt } from 'react-icons/fa';
 import { getUserFavApi, removeFavApi } from '../../services/allApi';
 import serverurl from '../../services/serverurl';
 import Header from '../components/user/Header'
 import { toast, ToastContainer } from 'react-toastify';
+import { removefavoriteResponseContext } from '../../contextApi/Contextapi';
 
 const Favorites = () => {
+ const {removeFavouriteResponse,setRemoveFavouriteResponse} = useContext(removefavoriteResponseContext)
   const [favorites, setFavorites] = useState("")
 
   useEffect(()=>{
@@ -35,6 +37,7 @@ const Favorites = () => {
     const result = await removeFavApi(id)
     if(result.status == 200){
       toast.error("item removed from favourites")
+      setRemoveFavouriteResponse(result)
       getFavourite()
     }
   }
@@ -43,7 +46,7 @@ const Favorites = () => {
     <>
        <Header/>
       <div className="flex flex-col items-center pt-32  p-6 bg-gray-100 min-h-screen">
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-6">⭐ Your Favorite Places</h1>
+        <h1 className="text-4xl font-extrabold text-gray-800 mb-6">Your Favorite Places</h1>
         
         {favorites.length === 0 ? (
           <p className="text-gray-600 text-lg">No favorites added yet. Start exploring and save your favorite places!</p>
