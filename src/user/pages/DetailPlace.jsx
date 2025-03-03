@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import serverurl from "../../services/serverurl";
 import { toast, ToastContainer } from "react-toastify";
 import Header from "../components/user/Header";
-import { addfavoriteResponseContext } from "../../contextApi/Contextapi";
+import { addfavoriteResponseContext } from "../../contextApi/ContextApis";
 
 const DetailPlace = () => {
     const {addFavouriteResponse,setAddFavouriteResponse}=useContext(addfavoriteResponseContext)

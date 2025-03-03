@@ -4,7 +4,7 @@ import { getUserFavApi, removeFavApi } from '../../services/allApi';
 import serverurl from '../../services/serverurl';
 import Header from '../components/user/Header'
 import { toast, ToastContainer } from 'react-toastify';
-import { removefavoriteResponseContext } from '../../contextApi/Contextapi';
+import { removefavoriteResponseContext } from '../../contextApi/ContextApis';
 
 const Favorites = () => {
  const {removeFavouriteResponse,setRemoveFavouriteResponse} = useContext(removefavoriteResponseContext)

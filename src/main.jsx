@@ -5,15 +5,15 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { ReactNotifications } from 'react-notifications-component'
 import "react-notifications-component/dist/theme.css";
-import Contextapi from './contextApi/contextApi.jsx'
+import ContextApis from './contextApi/ContextApis.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Contextapi>
+    <ContextApis>
       <BrowserRouter>
       <ReactNotifications/>
         <App />
       </BrowserRouter>
-    </Contextapi>
+    </ContextApis>
   </StrictMode>,
 )

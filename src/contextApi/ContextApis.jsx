@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react'
 export const addfavoriteResponseContext = createContext()
 export const removefavoriteResponseContext = createContext()
 
-const Contextapi = ({children}) => {
+const ContextApis = ({children}) => {
     const [addFavouriteResponse,setAddFavouriteResponse]=useState("")
     const [removeFavouriteResponse,setRemoveFavouriteResponse]=useState("")
   return (
@@ -15,4 +15,4 @@ const Contextapi = ({children}) => {
   )
 }
 
-export default Contextapi
+export default ContextApis
