@@ -6,10 +6,12 @@ import serverurl from "../../services/serverurl";
 import Header from "../components/user/Header";
 import { toast } from "react-toastify";
 import { Store } from "react-notifications-component";
+import { addTicketResponseContext } from "../../contextApi/ContextApis";
 // import { store } from "react-notifications-component";
 
 
 const EventDetails = () => {
+    const{addTicketResponse,setAddTicketResponse}=useContext(addTicketResponseContext)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [event, setEvent] = useState(null);
   const [tickets, setTickets] = useState(1);
@@ -97,6 +99,7 @@ const EventDetails = () => {
         
         if (response.status >= 200 && response.status < 300) {
             // toast.success("Booking successful!");
+            setAddTicketResponse(response)
             setIsModalOpen(false);
             setTickets(1);
             Store.addNotification({

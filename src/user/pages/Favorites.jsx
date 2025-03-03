@@ -53,7 +53,7 @@ const Favorites = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl">
             {favorites.map((place) => (
-              <div key={place.id} className="bg-white shadow-lg rounded-2xl overflow-hidden transform hover:scale-105 transition-all duration-300">
+              <div key={place._id} className="bg-white shadow-lg rounded-2xl overflow-hidden transform hover:scale-105 transition-all duration-300">
                 <img src={`${serverurl}/uploads/${place.placeImg}`} alt={place.name} className="w-full h-56 object-cover rounded-t-2xl" />
                 <div className="p-6 flex flex-col items-center">
                   <h2 className="text-2xl font-semibold text-gray-900 text-center">{place.placeName}</h2>

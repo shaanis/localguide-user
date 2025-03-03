@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getTicketsEventsApi } from "../../services/allApi";
 import Header from "../components/user/Header";
+import { addTicketResponseContext } from "../../contextApi/ContextApis";
 
 
 
 const TicketsPage = () => {
   const [bookedTickets, setBookedTickets] = useState([]);
+  const{addTicketResponse,setAddTicketResponse}=useContext(addTicketResponseContext)
   useEffect(()=>{
     getTickets()
-  },[])
+  },[addTicketResponse])
   const getTickets = async()=>{
     const token = sessionStorage.getItem("token")
     if(token){

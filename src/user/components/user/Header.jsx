@@ -1,19 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { getUserFavApi } from "../../../services/allApi";
-import { addfavoriteResponseContext, removefavoriteResponseContext } from "../../../contextApi/ContextApis";
+import { getTicketsEventsApi, getUserFavApi } from "../../../services/allApi";
+import { addfavoriteResponseContext, addTicketResponseContext, removefavoriteResponseContext } from "../../../contextApi/ContextApis";
 
 const Header = () => {
   const {addFavouriteResponse,setAddFavouriteResponse}=useContext(addfavoriteResponseContext)
   const {removeFavouriteResponse,setRemoveFavouriteResponse} = useContext(removefavoriteResponseContext)
+    const{addTicketResponse,setAddTicketResponse}=useContext(addTicketResponseContext)
   
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [favorite,setFavorite]=useState("")
+  const [tickets,setTickets]=useState("")
   useEffect(()=>{
     getFavourite()
   },[addFavouriteResponse,removeFavouriteResponse])
+  useEffect(()=>{
+    getTickets()
+  },[addTicketResponse])
    const getFavourite = async()=>{
       const token = sessionStorage.getItem("token")
     if(token){
@@ -32,6 +37,23 @@ const Header = () => {
     }
       
      }
+
+     const getTickets=async()=>{
+      const token = sessionStorage.getItem("token")
+      if(token){
+        const reqHeader = {
+          "Authorization":`Bearer ${token}`
+        }
+        try{
+          const result = await getTicketsEventsApi(reqHeader)
+          setTickets(result.data)
+        }catch(e){
+          console.log(e);
+          
+        }
+     }
+    }
+     
 
   const handleLogout = () => {
     sessionStorage.clear();
@@ -137,7 +159,7 @@ const Header = () => {
                 >
                   Tickets
                   <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-600 text-teal-50 rounded-full ms-1">
-                    1
+                  {tickets.length}
                   </span>
                 </Link>
                 <Link className="mt-2 transition-colors duration-300 transform lg:mt-0 lg:mx-4 hover:text-gray-900 dark:hover:text-gray-200">
