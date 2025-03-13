@@ -41,7 +41,11 @@ const TicketsPage = () => {
           </h2>
           {bookedTickets.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {bookedTickets.map((ticket) => {
+              {bookedTickets.sort((a, b) => {
+                  const aExpired = moment().isAfter(moment(a.date));
+                  const bExpired = moment().isAfter(moment(b.date));
+                  return aExpired - bExpired; // Moves expired tickets to the bottom
+                }).map((ticket) => {
                 const isExpired = moment().isAfter(moment(ticket.date));
                 return (
                   <div
