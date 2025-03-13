@@ -110,10 +110,6 @@ const EventDetails = () => {
               container: "top-right",
               dismiss: { duration: 5000 },
             });
-            const socket = new WebSocket("ws://localhost:8080");
-            socket.onopen = () => {
-                socket.send(JSON.stringify({ role: "user", user: userDetial.username  }));
-            };
 
             // ✅ Refresh event details to update available tickets
             detailEvent();
