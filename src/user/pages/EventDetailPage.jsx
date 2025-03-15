@@ -60,68 +60,98 @@ const EventDetails = () => {
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  const ticketBooking = async () => {
+  const totalPrice = event?.ticketPrice*tickets
+
+
+  const handlePayment = async () => {
+    const amount = totalPrice;
+    try {
+      const response = await fetch("http://localhost:3000/api/razorpay/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, currency: "INR" }),
+      });
+
+      const order = await response.json();
+      if (!order.id) {
+        toast.error("Payment initialization failed!");
+        return;
+      }
+
+      const options = {
+        key: "rzp_test_MRL7uHijW2Qyws",
+        amount: order.amount,
+        currency: order.currency,
+        name: "Local Guide",
+        description: "Test Transaction",
+        order_id: order.id,
+        handler: async function (response) {
+          const verifyResponse = await fetch("http://localhost:3000/api/razorpay/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...response, amount }),
+          });
+
+          const verifyData = await verifyResponse.json();
+          if (verifyData.success) {
+            // toast.success("Payment successful!");
+            await bookTickets();
+          } else {
+            toast.error("Payment verification failed!");
+          }
+        },
+        prefill: {
+          name: user.name,
+          email: user.email,
+          contact: "1234567890",
+        },
+        notes: { address: "Razorpay Corporate Office" },
+        theme: { color: "#3309cc" },
+      };
+
+      var razorpayInstance = new Razorpay(options);
+      razorpayInstance.open();
+    } catch (error) {
+      console.error("Error in handlePayment:", error);
+      toast.error("Something went wrong!");
+    }
+  };
+
+  const bookTickets = async () => {
     const token = sessionStorage.getItem("token");
     if (!token) {
-        toast.error("Please log in to book tickets.");
-        return;
-    }
-
-    if (!event) {
-        toast.error("Event details not available.");
-        return;
-    }
-
-    if (event.availableTickets === 0) {
-      toast.error("Tickets are sold out!");
-      setIsModalOpen(false)
+      toast.error("Please log in to book tickets.");
       return;
-      
-  }
-
-    if (tickets > event.availableTickets) {
-        toast.error(`Only ${event.availableTickets} tickets are left!!.`);
-        setIsModalOpen(false)
-        return;
     }
 
-    const reqHeader = {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-    };
-
-    const reqBody = {
-        ticketCount: tickets,
-    };
+    const reqHeader = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+    const reqBody = { ticketCount: tickets };
 
     try {
-        const response = await addBookingEventsApi(id, reqBody, reqHeader);
-        
-        if (response.status >= 200 && response.status < 300) {
-            // toast.success("Booking successful!");
-            setAddTicketResponse(response)
-            setIsModalOpen(false);
-            setTickets(1);
-            Store.addNotification({
-              title: "Booking Confirmed!",
-              message: "Your ticket has been successfully booked.",
-              type: "success",
-              insert: "top",
-              container: "top-right",
-              dismiss: { duration: 5000 },
-            });
-
-            // ✅ Refresh event details to update available tickets
-            detailEvent();
-        } else {
-            toast.error(response.message || "Booking failed! Please try again.");
-        }
+      const response = await addBookingEventsApi(id, reqBody, reqHeader);
+      if (response.status >= 200 && response.status < 300) {
+        setAddTicketResponse(response);
+        setIsModalOpen(false);
+        setTickets(1);
+        Store.addNotification({
+          title: "Booking Confirmed!",
+          message: "Your ticket has been successfully booked.",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          dismiss: { duration: 5000 },
+        });
+        detailEvent();
+      } else {
+        toast.error("Booking failed! Please try again.");
+      }
     } catch (error) {
-        console.error("Error during booking:", error);
-        toast.error("An error occurred while booking.");
+      console.error("Error during booking:", error);
+      toast.error("An error occurred while booking.");
     }
-};
-const totalPrice = event?.ticketPrice*tickets
+  };
+
+
 
 
   return (
@@ -212,7 +242,7 @@ const totalPrice = event?.ticketPrice*tickets
                 </div>
                 <div className="flex my-1 font-bold"><h2>Total Price : <span className="text-red-600">{totalPrice}</span></h2></div>
                 <button
-                  onClick={ticketBooking}
+                  onClick={handlePayment}
                   className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
                 >
                   Confirm Booking
