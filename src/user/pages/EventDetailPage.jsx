@@ -66,7 +66,7 @@ const EventDetails = () => {
   const handlePayment = async () => {
     const amount = totalPrice;
     try {
-      const response = await fetch("http://localhost:3000/api/razorpay/order", {
+      const response = await fetch(`${serverurl}/api/razorpay/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount, currency: "INR" }),
@@ -86,7 +86,7 @@ const EventDetails = () => {
         description: "Test Transaction",
         order_id: order.id,
         handler: async function (response) {
-          const verifyResponse = await fetch("http://localhost:3000/api/razorpay/verify", {
+          const verifyResponse = await fetch(`${serverurl}/api/razorpay/verify`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ ...response, amount }),
