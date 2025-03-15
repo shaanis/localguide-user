@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
     "@meraki-ui/meraki": "^5.0.9",
+    "@mui/material": "^6.4.7",
     "@tailwindcss/vite": "^4.0.0",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",

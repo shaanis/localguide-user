@@ -7,12 +7,14 @@ import Header from "../components/user/Header";
 import { toast } from "react-toastify";
 import { Store } from "react-notifications-component";
 import { addTicketResponseContext } from "../../contextApi/ContextApis";
+import { Spinner } from "react-bootstrap";
 // import { store } from "react-notifications-component";
 
 
 const EventDetails = () => {
     const{addTicketResponse,setAddTicketResponse}=useContext(addTicketResponseContext)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const[isLoading,setIsLoading]=useState(false)
   const [event, setEvent] = useState(null);
   const [tickets, setTickets] = useState(1);
   const { id } = useParams();
@@ -66,6 +68,7 @@ const EventDetails = () => {
   const handlePayment = async () => {
     const amount = totalPrice;
     try {
+     
       const response = await fetch(`${serverurl}/api/razorpay/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +97,6 @@ const EventDetails = () => {
 
           const verifyData = await verifyResponse.json();
           if (verifyData.success) {
-            // toast.success("Payment successful!");
             await bookTickets();
           } else {
             toast.error("Payment verification failed!");
@@ -114,6 +116,8 @@ const EventDetails = () => {
     } catch (error) {
       console.error("Error in handlePayment:", error);
       toast.error("Something went wrong!");
+    }finally{
+      setIsLoading(true)
     }
   };
 
@@ -128,6 +132,7 @@ const EventDetails = () => {
     const reqBody = { ticketCount: tickets };
 
     try {
+      setIsLoading(true)
       const response = await addBookingEventsApi(id, reqBody, reqHeader);
       if (response.status >= 200 && response.status < 300) {
         setAddTicketResponse(response);
@@ -148,6 +153,8 @@ const EventDetails = () => {
     } catch (error) {
       console.error("Error during booking:", error);
       toast.error("An error occurred while booking.");
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -198,16 +205,16 @@ const EventDetails = () => {
           {/* Registration Button */}
           <div className="mt-10">
           <button
-  className={`px-8 py-4 font-bold rounded-full shadow-lg text-lg transition duration-300 ${
-    event?.availableTickets === 0 
-      ? "bg-gray-400 cursor-not-allowed" 
-      : "bg-gradient-to-r from-purple-500 to-blue-600 text-white hover:from-purple-600 hover:to-blue-700"
-  }`}
-  onClick={toggleModal}
-  disabled={event?.availableTickets === 0}
->
-  {event?.availableTickets === 0 ? "Tickets Sold Out" : "Book Now"}
-</button>
+              className={`px-8 py-4 font-bold rounded-full shadow-lg text-lg transition duration-300 ${
+                event?.availableTickets === 0 
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "bg-gradient-to-r from-purple-500 to-blue-600 text-white hover:from-purple-600 hover:to-blue-700"
+              }`}
+              onClick={toggleModal}
+              disabled={event?.availableTickets === 0}
+            >
+              {event?.availableTickets === 0 ? "Tickets Sold Out" : "Book Now"}
+            </button>
 
           </div>
     
@@ -242,11 +249,20 @@ const EventDetails = () => {
                 </div>
                 <div className="flex my-1 font-bold"><h2>Total Price : <span className="text-red-600">{totalPrice}</span></h2></div>
                 <button
-                  onClick={handlePayment}
-                  className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
-                >
-                  Confirm Booking
-                </button>
+                    onClick={handlePayment}
+                    className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Spinner  animation="border" size="sm" className="mr-2 text-white" />
+                        Processing...
+                      </>
+                    ) : (
+                      "Confirm Booking"
+                    )}
+                  </button>
+
               </div>
             </div>
           )}
